@@ -1,0 +1,3 @@
+{
+    "mongoURI": "mongodb+srv://stackhack:stackhack@cluster0.dl02l.mongodb.net/<dbname>?retryWrites=true&w=majority"
+}
