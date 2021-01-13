@@ -1,0 +1,49 @@
+const express = require('express')
+const morgan = require('morgan')
+const bodyParser = require('body-parser')
+const cors = require('cors')
+const connectDB = require('./config/db.js')
+
+
+// Config .env to ./config/config.env
+require('dotenv').config({
+    path: './config/config.env'
+})
+const app = express()
+// Connect to database
+connectDB();
+
+// body parser
+app.use(bodyParser.json())
+
+
+//Config for only development
+if (process.env.NODE_ENV === 'development'){
+    app.use(cors({
+        origin: process.env.CLIENT_URL
+    }))
+
+    app.use(morgan('dev'))
+    //Morgan give information about each request
+    //Cors it allow to deal with react from localhost at port 3000 without any problem
+}
+
+//Load all routes
+
+const authRouter = require('./routes/auth.route')
+
+// Use Routes
+app.use('/api/',authRouter);
+
+app.use( (req, res, next) =>{
+    res.status(404).json({
+        success: false,
+        message: "Page not found"
+    })
+});
+
+const PORT = process.env.PORT
+
+app.listen(PORT,()=>{
+    console.log(`App listening on port ${PORT}`);
+});
